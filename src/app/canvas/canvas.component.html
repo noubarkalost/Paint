@@ -1,44 +1,75 @@
-<div class="canvas-component">
-  <div class="controls-panel">
-    <select class="size-selector"
-            [(ngModel)]="selectedSize"
-            (change)="onSizeSelect()"
-    >
-      <option *ngFor="let size of canvasSizes"
-              [value]="size">
-        {{size}}
-      </option>
-    </select>
-    <button class="button-generate"
-            (click)="onGenerateCircles()">
-      Generate
-    </button>
-    <div class="picker-wrapper">
-      <div class="picker-inner"
-           [style.background-color]="currentColor"></div>
-      <input class="picker" type="color"
-             [(ngModel)]="currentColor" />
-    </div>
-    <button class="button-reset"
-            (click)="onResetColor()">Reset</button>
-    <button class="button-fill-all"
-            (click)="onFillCircles()">Fill all</button>
-    <button class="button-fill-all"
-            (click)="onSave()">Save</button>
-    <input type="text" [(ngModel)]="projectName" />
-    <div class="projects-container">
-      <div *ngFor="let project of projectList"
-           class="project"
-           (click)="selectProject(project)">
-        <p>Project: {{project.name}}</p>
+<div class="button-container">
+
+  <button class="button is-rounded is-danger" [disabled]="resetIsDisabled"
+          (click)="onResetColor()">Reset
+  </button>
+  <button class="button is-rounded is-warning" [disabled]="fillIsDisabled"
+          (click)="onFillCircles()">Fill all
+  </button>
+  <button class="button is-rounded is-outlined is-primary" [disabled]="!projectName || saveIsDisabled"
+          (click)="onSave()">Save Existing ( and/or ) Create New
+  </button>
+  <button class="button is-danger is-rounded is-outlined" (click)="onDeleteAll()" [disabled]="!(projectList.length >= 2) ">
+    Remove All
+  </button>
+</div>
+
+<div class="button-container">
+  <div class="picker-wrapper">
+    <div class="picker-inner"
+         [style.background-color]="currentColor"></div>
+    <input class="picker" type="color"
+           [(ngModel)]="currentColor"/>
+  </div>
+
+  <input class="input is-rounded" type="text" placeholder="Name your project, then you can save it"
+         [(ngModel)]="projectName"/>
+
+  <div class="canvas-component">
+    <div class="dropdown is-hoverable">
+      <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+        <div class="dropdown-content">
+          <div class="dropdown-item">
+            <p>Select the circles number to generate a schematic</p>
+          </div>
+        </div>
       </div>
+
+      <select class="dropdown-trigger"
+              [(ngModel)]="selectedSize"
+              (change)="onSizeSelect()"
+      >
+        <option *ngFor="let size of canvasSizes"
+                [value]="size">
+          {{size}}
+        </option>
+      </select>
     </div>
   </div>
-  <div class="circles-container container-{{selectedSize}}">
+</div>
+
+<div class="box">
+  <div class="container circles-container container-{{selectedSize}}">
     <app-circle *ngFor="let circle of circles"
                 [color]="circle.color"
                 (click)="onCircleClick(circle)">
     </app-circle>
   </div>
 </div>
+
+
+<div class="card-content">
+  <div class="container">
+
+      <div *ngFor="let project of projectList; let i = index"
+           class="project"
+           (click)="selectProject(project)">
+        <button class="delete" (click)="onDeleteProject(i)"> Remove</button>
+        <p>Project: {{project.name}} , done with circle count:  {{project.circles.length}}</p>
+        <hr>
+      </div>
+
+  </div>
+</div>
+
 
